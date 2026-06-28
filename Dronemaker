@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ambient Drone & Pulse Space</title>
+    <style>
+        :root {
+            --bg-color: #0d0d11;
+            --card-bg: #16161f;
+            --accent: #6200ee;
+            --accent-secondary: #03dac6;
+            --text: #e1e1e6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text);
+            margin: 0;
+            padding: 15px 15px 90px 15px;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        h1, h2 { margin-top: 0; color: #fff; text-align: center;}
+        h1 { font-size: 1.4rem; margin-bottom: 20px; }
+        h2 { font-size: 1.05rem; margin-bottom: 15px; border-bottom: 1px solid #2a2a3a; padding-bottom: 5px; text-align: left;}
+
+        .control-panel {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+        .btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .slider-group { margin-bottom: 12px; }
+        .slider-group label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+            color: #b0b0bc;
+        }
+
+        input[type=range] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #2a2a3a;
+            outline: none;
+            -webkit-appearance: none;
+            margin: 8px 0;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--accent-secondary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        select {
+            width: 100%;
+            background: #2a2a3a;
+            color: white;
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-top: 5px;
+            outline: none;
+        }
+
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #000;
+            padding: 12px 15px;
+            display: flex;
+            gap: 10px;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.6);
+            z-index: 1000;
+        }
+        .bottom-bar .btn { margin-bottom: 0; }
+    </style>
+</head>
+<body>
+
+    <h1>Ambient Drone & Pulse Space</h1>
+
+    <button id="startBtn" class="btn">Start Audio Engine</button>
+
+    <div class="control-panel" style="border: 1px solid var(--accent-secondary);">
+        <h2>Pulsing Drone Layer</h2>
+        <div class="slider-group">
+            <label><span>Pulse Frequency</span><span id="pulse-freq-val">80 Hz</span></label>
+            <input type="range" id="pulse-freq" min="40" max="200" value="80">
+        </div>
+        <div class="slider-group">
+            <label><span>Pulse Speed (Rate)</span><span id="pulse-rate-val">2.0 Hz</span></label>
+            <input type="range" id="pulse-rate" min="1" max="100" value="20" step="1"> </div>
+        <div class="slider-group">
+            <label><span>Waveform Shape</span></label>
+            <select id="pulse-wave">
+                <option value="sine">Sine (Smooth)</option>
+                <option value="triangle">Triangle (Warm)</option>
+                <option value="sawtooth">Sawtooth (Sharp)</option>
+                <option value="square">Square (Chippy)</option>
+            </select>
+        </div>
+        <div class="slider-group">
+            <label><span>Pulse Volume</span></label>
+            <input type="range" id="pulse-vol" min="0" max="100" value="0">
+        </div>
+    </div>
+
+    <div class="control-panel">
+        <h2>Drone Foundations</h2>
+        <div class="slider-group">
+            <label><span>Low Bass Hum</span><span id="d1-freq-val">55 Hz</span></label>
+            <input type="range" id="d1-freq" min="40" max="120" value="55">
+            <input type="range" id="d1-vol" min="0" max="100" value="40">
+        </div>
+        <div class="slider-group">
+            <label><span>Mid Drone Atmosphere</span><span id="d2-freq-val">220 Hz</span></label>
+            <input type="range" id="d2-freq" min="150" max="450" value="220">
+            <input type="range" id="d2-vol" min="0" max="100" value="20">
+        </div>
+    </div>
+
+    <div class="control-panel">
+        <h2>Nature Environments</h2>
+        <div class="slider-group">
+            <label><span>Wind Gusts</span></label>
+            <input type="range" id="nature-wind" min="0" max="100" value="0">
+        </div>
+        <div class="slider-group">
+            <label><span>Running River</span></label>
+            <input type="range" id="nature-water" min="0" max="100" value="0">
+        </div>
+        <div class="slider-group">
+            <label><span>Forest Birds</span></label>
+            <input type="range" id="nature-birds" min="0" max="100" value="0">
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        <button id="recordBtn" class="btn" style="background-color: #018786;" disabled>Record Mix</button>
+        <button id="stopRecordBtn" class="btn" style="display:none; background-color: #cf6679;">Stop & Save</button>
+    </div>
+
+    <script>
+        let audioCtx = null;
+        let mainDest = null;
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let isPlaying = false;
+
+        const startBtn = document.getElementById('startBtn');
+        const recordBtn = document.getElementById('recordBtn');
+        const stopRecordBtn = document.getElementById('stopRecordBtn');
+
+        startBtn.addEventListener('click', async () => {
+            if (!audioCtx) {
+                initAudio();
+                if (audioCtx.state === 'suspended') {
+                    await audioCtx.resume();
+                }
+                startBtn.textContent = "Stop Audio Engine";
+                startBtn.style.backgroundColor = "#444";
+                isPlaying = true;
+                recordBtn.disabled = false;
+            } else {
+                if (isPlaying) {
+                    await audioCtx.suspend();
+                    startBtn.textContent = "Resume Audio Engine";
+                    startBtn.style.backgroundColor = "var(--accent)";
+                } else {
+                    await audioCtx.resume();
+                    startBtn.textContent = "Stop Audio Engine";
+                    startBtn.style.backgroundColor = "#444";
+                }
+                isPlaying = !isPlaying;
+            }
+        });
+
+        function initAudio() {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // CRITICAL HARDWARE ROUTING FIX: Assemble a unified structural audio node chain
+            const finalMixer = audioCtx.createGain();
+            finalMixer.gain.setValueAtTime(0.5, audioCtx.currentTime);
+
+            // Connect final centralized track out to device audio nodes simultaneously
+            mainDest = audioCtx.createMediaStreamDestination();
+            finalMixer.connect(audioCtx.destination);
+            finalMixer.connect(mainDest);
+
+            // --- 1. CORE BACKGROUND DRONES ---
+            const createDrone = (type, freqId, volId) => {
+                const osc = audioCtx.createOscillator();
+                const oscDetune = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+
+                osc.type = type;
+                oscDetune.type = 'sine';
+
+                const initialFreq = parseFloat(document.getElementById(freqId).value);
+                osc.frequency.setValueAtTime(initialFreq, audioCtx.currentTime);
+                oscDetune.frequency.setValueAtTime(initialFreq * 1.015, audioCtx.currentTime);
+
+                const targetVol = (parseFloat(document.getElementById(volId).value) / 100) * 0.3;
+                gainNode.gain.setValueAtTime(targetVol > 0 ? targetVol : 0.0001, audioCtx.currentTime);
+
+                osc.connect(gainNode);
+                oscDetune.connect(gainNode);
+                gainNode.connect(finalMixer);
+                osc.start(0);
+                oscDetune.start(0);
+
+                document.getElementById(freqId).addEventListener('input', (e) => {
+                    const f = parseFloat(e.target.value);
+                    document.getElementById(`${freqId}-val`).textContent = f + " Hz";
+                    osc.frequency.setTargetAtTime(f, audioCtx.currentTime, 0.05);
+                    oscDetune.frequency.setTargetAtTime(f * 1.015, audioCtx.currentTime, 0.05);
+                });
+
+                document.getElementById(volId).addEventListener('input', (e) => {
+                    const v = (parseFloat(e.target.value) / 100) * 0.3;
+                    gainNode.gain.setTargetAtTime(v > 0 ? v : 0.0001, audioCtx.currentTime, 0.05);
+                });
+            };
+
+            createDrone('sawtooth', 'd1-freq', 'd1-vol');
+            createDrone('triangle', 'd2-freq', 'd2-vol');
+
+            // --- 2. EXTRA PULSING GENERATOR LAYER ---
+            const pulseOsc = audioCtx.createOscillator();
+            const pulseGain = audioCtx.createGain();
+            
+            // Read UI starting states
+            pulseOsc.type = document.getElementById('pulse-wave').value;
+            pulseOsc.frequency.setValueAtTime(parseFloat(document.getElementById('pulse-freq').value), audioCtx.currentTime);
+            
+            // Set up LFO to modulate volume envelope smoothly
+            const pulseLFO = audioCtx.createOscillator();
+            const pulseLFOGain = audioCtx.createGain();
+            
+            // Slider scaling: slider reading 1-100 remaps directly to 0.2Hz - 8Hz pulse rhythms
+            const initialRate = 0.2 + (parseFloat(document.getElementById('pulse-rate').value) / 100) * 7.8;
+            document.getElementById('pulse-rate-val').textContent = initialRate.toFixed(1) + " Hz";
+            
+            pulseLFO.frequency.setValueAtTime(initialRate, audioCtx.currentTime);
+            pulseLFOGain.gain.setValueAtTime(0.5, audioCtx.currentTime); // control bounds of swing
+
+            // Bias up the pulse via standard automation loop curves so it doesn't clip negative values
+            const pulseLevelBias = audioCtx.createGain();
+            const startVol = (parseFloat(document.getElementById('pulse-vol').value) / 100) * 0.4;
+            pulseLevelBias.gain.setValueAtTime(startVol > 0 ? startVol : 0.0001, audioCtx.currentTime);
+
+            // Audio route path: LFO -> Volume gain index manipulation
+            pulseLFO.connect(pulseLFOGain);
+            pulseOsc.connect(pulseGain);
+            pulseLFOGain.connect(pulseGain.gain); // Injecting the modulation directly into volume node parameter
+            pulseGain.connect(pulseLevelBias);
+            pulseLevelBias.connect(finalMixer);
+
+            pulseOsc.start(0);
+            pulseLFO.start(0);
+
+            // Pulsing Node event UI listeners
+            document.getElementById('pulse-freq').addEventListener('input', (e) => {
+                const f = parseFloat(e.target.value);
+                document.getElementById('pulse-freq-val').textContent = f + " Hz";
+                pulseOsc.frequency.setTargetAtTime(f, audioCtx.currentTime, 0.05);
+            });
+
+            document.getElementById('pulse-rate').addEventListener('input', (e) => {
+                const r = 0.2 + (parseFloat(e.target.value) / 100) * 7.8;
+                document.getElementById('pulse-rate-val').textContent = r.toFixed(1) + " Hz";
+                pulseLFO.frequency.setTargetAtTime(r, audioCtx.currentTime, 0.05);
+            });
+
+            document.getElementById('pulse-wave').addEventListener('change', (e) => {
+                pulseOsc.type = e.target.value;
+            });
+
+            document.getElementById('pulse-vol').addEventListener('input', (e) => {
+                const v = (parseFloat(e.target.value) / 100) * 0.4;
+                pulseLevelBias.gain.setTargetAtTime(v > 0 ? v : 0.0001, audioCtx.currentTime, 0.05);
+            });
+
+
+            // --- 3. HARWARE DIRECT NATURE SOUND EMULATORS ---
+            // Built natively to prevent browser data buffers from muting on split outputs.
+            const noiseBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate, audioCtx.sampleRate);
+            const noiseData = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < audioCtx.sampleRate; i++) {
+                noiseData[i] = Math.random() * 2 - 1;
+            }
+
+            const buildNatureNode = (freq, type, q) => {
+                const src = audioCtx.createBufferSource();
+                src.buffer = noiseBuffer;
+                src.loop = true;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = type;
+                filter.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                filter.Q.setValueAtTime(q, audioCtx.currentTime);
+
+                const volumeNode = audioCtx.createGain();
+                volumeNode.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+
+                src.connect(filter);
+                filter.connect(volumeNode);
+                volumeNode.connect(finalMixer);
+                src.start(0);
+
+                return { volumeNode, filter };
+            };
+
+            const wind = buildNatureNode(280, 'lowpass', 2);
+            const water = buildNatureNode(700, 'bandpass', 1.2);
+
+            // Continuous parameter modulators
+            const wMod = audioCtx.createOscillator();
+            const wGain = audioCtx.createGain();
+            wMod.frequency.setValueAtTime(0.07, audioCtx.currentTime);
+            wGain.gain.setValueAtTime(140, audioCtx.currentTime);
+            wMod.connect(wGain); wGain.connect(wind.filter.frequency);
+            wMod.start(0);
+
+            const watMod = audioCtx.createOscillator();
+            const watGain = audioCtx.createGain();
+            watMod.frequency.setValueAtTime(1.4, audioCtx.currentTime);
+            watGain.gain.setValueAtTime(180, audioCtx.currentTime);
+            watMod.connect(watGain); watGain.connect(water.filter.frequency);
+            watMod.start(0);
+
+            document.getElementById('nature-wind').addEventListener('input', (e) => {
+                const v = (parseFloat(e.target.value) / 100) * 0.7;
+                wind.volumeNode.gain.setTargetAtTime(v > 0 ? v : 0.0001, audioCtx.currentTime, 0.05);
+            });
+
+            document.getElementById('nature-water').addEventListener('input', (e) => {
+                const v = (parseFloat(e.target.value) / 100) * 0.4;
+                water.volumeNode.gain.setTargetAtTime(v > 0 ? v : 0.0001, audioCtx.currentTime, 0.05);
+            });
+
+            // --- 4. FOREST BIRDS GENERATOR ---
+            function runBirdCycle() {
+                if (!audioCtx || audioCtx.state === 'suspended') {
+                    setTimeout(runBirdCycle, 1000);
+                    return;
+                }
+
+                const currentVolValue = parseFloat(document.getElementById('nature-birds').value) / 100;
+                if (currentVolValue === 0) {
+                    setTimeout(runBirdCycle, 1000);
+                    return;
+                }
+
+                const bOsc = audioCtx.createOscillator();
+                const bGain = audioCtx.createGain();
+                bOsc.type = 'sine';
+
+                const targetPitch = 2000 + Math.random() * 900;
+                bOsc.frequency.setValueAtTime(targetPitch, audioCtx.currentTime);
+                bOsc.frequency.exponentialRampToValueAtTime(targetPitch - 700, audioCtx.currentTime + 0.09);
+
+                bGain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+                bGain.gain.linearRampToValueAtTime(currentVolValue * 0.07, audioCtx.currentTime + 0.01);
+                bGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
+
+                bOsc.connect(bGain);
+                bGain.connect(finalMixer);
+
+                bOsc.start(0);
+                bOsc.stop(audioCtx.currentTime + 0.11);
+
+                setTimeout(runBirdCycle, 400 + Math.random() * 2200);
+            }
+            runBirdCycle();
+
+            setupRecorder();
+        }
+
+        // --- 5. DATA STREAM EXPORT HANDLER ---
+        function setupRecorder() {
+            let options = { mimeType: 'audio/webm' };
+            if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                options = { mimeType: 'audio/ogg' };
+            }
+
+            mediaRecorder = new MediaRecorder(mainDest.stream, options);
+            mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) recordedChunks.push(e.data); };
+
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(recordedChunks, { type: mediaRecorder.mimeType });
+                recordedChunks = [];
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `ambient-mix-${Date.now()}.webm`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+
+            recordBtn.addEventListener('click', () => {
+                recordedChunks = [];
+                mediaRecorder.start();
+                recordBtn.style.display = 'none';
+                stopRecordBtn.style.display = 'block';
+            });
+
+            stopRecordBtn.addEventListener('click', () => {
+                mediaRecorder.stop();
+                recordBtn.style.display = 'block';
+                stopRecordBtn.style.display = 'none';
+            });
+        }
+    </script>
+</body>
+</html>
